@@ -68,6 +68,12 @@ public class AuthController {
         return "users";
     }
 
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
+
+        return "dashboard";
+    }
+
     //handler methods for handling login request.
 
     @GetMapping("/login")

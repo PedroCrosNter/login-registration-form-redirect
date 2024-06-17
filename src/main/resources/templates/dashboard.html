@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body sec:authorize="isAuthenticated()">
+
+    <header>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/index}">Home</a>
+        </li>
+        <ul sec:authorize="hasRole('ADMIN')">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/index}">ERES el ADMIN</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/index}">PANEL DE ADMINISTRADOR</a>
+            </li>
+        </ul>
+        <ul sec:authorize="hasRole('TEACHER')">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/index}">ERES el TEACHER</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/index}">PANEL DE TEACHER</a>
+            </li>
+        </ul>
+    </header>
+
+    <main sec:authorize="hasRole('ADMIN')" th:include="roles/admin/admin_fragments :: dashboard"></main>
+
+    <main sec:authorize="hasRole('TEACHER')" th:include="roles/teacher/teacher_fragments :: dashboard"></main>
+</body>
+
+
+<body sec:authorize="!isAuthenticated()">
+    <p>NO TIENES ACCESO</p>
+</body>
+
+</html>

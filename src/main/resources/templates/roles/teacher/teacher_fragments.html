@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<body th:fragment="dashboard">
+    <main sec:authorize="hasRole('TEACHER')">
+        <p>BIENVENIDO AL PANEL DE</p>
+        <h1>PROFESOR</h1>
+    </main>
+</body>
+</html>

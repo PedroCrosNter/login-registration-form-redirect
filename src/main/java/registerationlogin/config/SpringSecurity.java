@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.thymeleaf.extras.springsecurity6.util.SpringSecurityContextUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -33,9 +34,10 @@ public class SpringSecurity {
         http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/register/**").permitAll()
-                .requestMatchers("/index").permitAll()        //For matching http request requests.
-                .requestMatchers("/users").hasRole("ADMIN") //Giving acess for admins role users only.
-                .requestMatchers("/dashboard").hasAnyRole("*")
+                .requestMatchers("/index").permitAll() //For matching http request requests.
+                .requestMatchers("/dashboard").hasAnyRole("ADMIN","TEACHER")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/teacher/**").hasRole("TEACHER")
                 .requestMatchers("/afterLogin").hasAnyRole("*") //Giving acess for all roles users.
                 //.requestMatchers("/users").hasRole("USER")
                 .and()
@@ -44,18 +46,6 @@ public class SpringSecurity {
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/dashboard")
-                                /*
-                                .successHandler((request, response, authentication) -> {
-                                    response.sendRedirect("/dashboard");
-                                    String role = getRole();
-
-                                    switch (role.toUpperCase()) {
-                                        case "ADMIN" -> response.sendRedirect("adminDashboard");
-                                        case "TEACHER" -> response.sendRedirect("roles/teacherDashboard");
-                                        default -> response.sendRedirect("error");
-                                    };
-                                })
-                                */
                                 .permitAll()
                 ).logout(
                         logout -> logout
@@ -70,13 +60,5 @@ public class SpringSecurity {
     public void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());      //Just passwordEncoder bean and UserDetailsService bean must be there then no need of this configuration setting as sping6 will automatically set user details, service and password encoded objects to auntication.
-    }
-
-    private String getRole() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse("USER");
     }
 }

@@ -20,18 +20,25 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String name;
+    private String username;
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL) //This FetchType.Eager is to ensure that hibernate loads All the jpa entities associates with main jpa entitiy while initiating them.
+//    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL) //This FetchType.Eager is to ensure that hibernate loads All the jpa entities associates with main jpa entitiy while initiating them.
+//    @JoinTable(
+//            name="user_roles",
+//            joinColumns = {@JoinColumn(name="user_id",referencedColumnName = "id")},
+//            inverseJoinColumns = {@JoinColumn(name="role_id",referencedColumnName = "id")} //For 3rd table to have 2 tables primary keys.
+//    )
+//    private List<Role> roles = new ArrayList<>();   //Cascading is the option whenver we are changing any record of user, then respective record for role
+
+    @ManyToMany
     @JoinTable(
-            name="user_roles",
-            joinColumns = {@JoinColumn(name="user_id",referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name="role_id",referencedColumnName = "id")} //For 3rd table to have 2 tables primary keys.
-    )
-    private List<Role> roles = new ArrayList<>();   //Cascading is the option whenver we are changing any record of user, then respective record for role
-//will also be changed.
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles = new ArrayList<>();
+
 }

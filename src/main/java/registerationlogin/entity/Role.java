@@ -5,23 +5,30 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import registerationlogin.shared.ERole;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "roles")
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name="roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable=false,unique=true)
-    private String name;
+    private Integer id;
 
-    @ManyToMany(mappedBy = "roles") //mapped by is a keyword to let know compiler that there is a bidirectional mapping between user and role entities.
-    private List<User> user =new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
+
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users = new ArrayList<>();
+
+    public Role(ERole name) {
+        this.name = name;
+    }
 }
